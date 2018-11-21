@@ -1,28 +1,22 @@
 require("dotenv").config();
-//var spotify = require("spotify");
-//const spotifyKey = new Spotify(keys.spotify)
+const Spotify = require("node-spotify-api");
+const spotifyKeys = require("./keys.js");
 const axios = require("axios");
-//const spotify = require("spotify");
 
 let userCommand = process.argv[2];
 let userSearch = process.argv[3].slice();
 
 
-// function spotifySearch() {
-//     get spotifyQuery = "https://api.spotify.com/v1/search?q=" + songTitle + "&type=track&limit=10"
-
-//     spotify.search({
-//         type: 'track',
-//         query: spotifyQuery
-//     }, function (err, data) {
-//         if (err) {
-//             console.log('Error occurred: ' + err);
-//             return;
-//         } else {
-//             console.log(data)
-//         }
-//     })
-// };
+function spotifySearch() {
+    var spotify = new Spotify(spotifyKeys);
+       
+      spotify.search({ type: 'track', query: 'userSearch' }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+       
+      console.log(data); 
+      })};
 
 function omdbSearch() {
     let queryURL = "http://www.omdbapi.com/?t=" + userSearch + "&y=&plot=short&apikey=trilogy"
@@ -47,11 +41,18 @@ ${"Actors: " + data.Actors}
     )
 }
 
+// function bandsInTownSearch(){
+
+// }
+
 switch (userCommand) {
-    case "omdb-this":
+    case "movie-this":
         omdbSearch();
         break;
     case "spotify-this":
         spotifySearch();
+        break;
+    case "concert-this":
+        bandsInTownSearch();
         break;
 }
