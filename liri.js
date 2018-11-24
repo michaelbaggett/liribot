@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Spotify = require("node-spotify-api");
 const keys = require("./keys.js");
+const moment = require("moment")
 const axios = require("axios");
 
 let userCommand = process.argv[2];
@@ -55,16 +56,18 @@ function bandsInTownSearch() {
             let venue2 = response.data[1].venue.name;
             let city1 = response.data[0].venue.city;
             let city2 = response.data[1].venue.city;
+            let state1 = response.data[0].venue.region;
+            let state2 = response.data[1].venue.region;
             let time1 = response.data[0].datetime;
             let time2 = response.data[1].datetime;
             console.log(
 `
 Venue: ${venue1} 
-City: ${city1} 
-Date: ${time1},
+Where: ${city1}, ${state1}
+Date: ${moment(time1).format('LLL')},
 Venue: ${venue2} 
-City: ${city2} 
-Date: ${time2}
+Where: ${city2}, ${state2} 
+Date: ${moment(time2).format('LLL')}
 `)
         }
     )
