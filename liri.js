@@ -6,9 +6,10 @@ const axios = require("axios");
 const fs = require("fs");
 
 let userCommand = process.argv[2];
-let userSearch = process.argv[3];
+let userSearch = process.argv[3].slice();
 
 
+//can't figure out why this search isn't working--this is my error-----Error: Could not initialize Spotify client. You must supply an object containing your Spotify client "id" and "secret".-----
 function spotifySearch() {
     var spotify = new Spotify(keys);
 
@@ -27,7 +28,7 @@ function spotifySearch() {
 function omdbSearch() {
     let queryURL = "http://www.omdbapi.com/?t=" + userSearch + "&y=&plot=short&apikey=trilogy"
 
-
+//unable to get a search to work when there is no userSearch parameter. below was my thinking for potential code. 
     // if (!userSearch) {
     //     userSearch = "Mr Nobody";
     //     axios.get(queryURL).then(
@@ -35,7 +36,7 @@ function omdbSearch() {
     //             console.log(response)
     //         }
     //     )
-    // }
+    // } 
     axios.get(queryURL).then(
         function (response) {
             const data = response.data;
@@ -88,13 +89,13 @@ function doWhatItSays() {
         if (err) {
             return console.log(err)
         }
-        //console.log(data)
         let dataArr = data.split(",");
         console.log(dataArr);
         if (dataArr[0] === "movie-this") {
+            userCommand = dataArr[0]
             userSearch = dataArr[1]
-            console.log(userSearch)
-            //omdbSearch();
+            console.log(userCommand, userSearch)
+            omdbSearch();
         }
     })
 }
