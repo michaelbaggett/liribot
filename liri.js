@@ -3,9 +3,10 @@ const Spotify = require("node-spotify-api");
 const keys = require("./keys.js");
 const moment = require("moment")
 const axios = require("axios");
+const fs = require("fs");
 
 let userCommand = process.argv[2];
-let userSearch = process.argv[3].slice();
+let userSearch = process.argv[3];
 
 
 function spotifySearch() {
@@ -26,10 +27,19 @@ function spotifySearch() {
 function omdbSearch() {
     let queryURL = "http://www.omdbapi.com/?t=" + userSearch + "&y=&plot=short&apikey=trilogy"
 
+
+    // if (!userSearch) {
+    //     userSearch = "Mr Nobody";
+    //     axios.get(queryURL).then(
+    //         function (response) {
+    //             console.log(response)
+    //         }
+    //     )
+    // }
     axios.get(queryURL).then(
         function (response) {
             const data = response.data;
-            //xqconsole.log(data);
+            //console.log(data);
             console.log(
                 `
 ${"Movie Title:" + data.Title},
@@ -61,7 +71,7 @@ function bandsInTownSearch() {
             let time1 = response.data[0].datetime;
             let time2 = response.data[1].datetime;
             console.log(
-`
+                `
 Venue: ${venue1} 
 Where: ${city1}, ${state1}
 Date: ${moment(time1).format('LLL')},
@@ -73,6 +83,22 @@ Date: ${moment(time2).format('LLL')}
     )
 }
 
+function doWhatItSays() {
+    fs.readFile("random.txt", "utf-8", function (err, data) {
+        if (err) {
+            return console.log(err)
+        }
+        //console.log(data)
+        let dataArr = data.split(",");
+        console.log(dataArr);
+        if (dataArr[0] === "movie-this") {
+            userSearch = dataArr[1]
+            console.log(userSearch)
+            //omdbSearch();
+        }
+    })
+}
+
 switch (userCommand) {
     case "movie-this":
         omdbSearch();
@@ -82,5 +108,8 @@ switch (userCommand) {
         break;
     case "concert-this":
         bandsInTownSearch();
+        break;
+    case "do-what-it-says":
+        doWhatItSays();
         break;
 }
